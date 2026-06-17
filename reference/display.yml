@@ -1,0 +1,27 @@
+# reference/display.yml
+# Le champ "type" doit correspondre exactement à la clé dans CHART_HANDLERS
+
+displays:
+
+  bar_monthly:
+    type: bar_monthly
+    color: "#3498db"
+
+  bar_monthly_multi_year:
+    type: bar_monthly_multi_year
+    colors:
+      - "#3498db"
+      - "#e67e22"
+      - "#2ecc71"
+      - "#9b59b6"
+      - "#e74c3c"
+
+  bar_stacked:
+    type: bar_stacked
+    colors:
+      - "#3498db"
+      - "#e67e22"
+      - "#2ecc71"
+      - "#9b59b6"
+      - "#e74c3c"
+      - "#1abc9c"

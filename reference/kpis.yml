@@ -1,0 +1,59 @@
+# reference/kpis.yml
+# Bibliothèque de KPIs — indépendante de tout projet
+
+kpis:
+
+  monthly_sum:
+    description: "Agrégation mensuelle d'un compteur"
+    unit: "from_meter"
+    aggregation: monthly
+    display_ref: bar_monthly
+    required_inputs:
+      meter:
+        description: "Compteur à agréger"
+        unit: any
+
+  monthly_sum_multi_year:
+    description: "Agrégation mensuelle multi-années — comparaison inter-annuelle"
+    unit: "from_meter"
+    aggregation: monthly_multi_year
+    display_ref: bar_monthly_multi_year
+    required_inputs:
+      meter:
+        description: "Compteur à agréger"
+        unit: any
+      years:
+        description: "Liste des années à comparer"
+        type: list
+
+  stacked:
+    description: "Histogramme empilé — plusieurs meters, résolution paramétrable"
+    unit: "from_meters"
+    display_ref: bar_stacked
+    required_inputs:
+      meters:
+        description: "Liste de meters [{meter, label, sign?}]"
+        type: list
+      unit:
+        description: "Unité commune à tous les meters"
+    optional_inputs:
+      resolution:
+        description: "monthly (défaut) | yearly | weekly"
+        default: monthly
+      line:
+        description: "Ligne optionnelle superposée"
+        fields:
+          type: "cumulative_sum | meter | reference"
+          label: "Label affiché dans la légende"
+          color: "Couleur hex"
+          unit: "Unité de la ligne si différente"
+          axis: "primary (défaut) | secondary"
+          meter: "meter_id si type=meter"
+          value: "constante si type=reference"
+          
+  scatter:
+    description: "Scatter plot avec courbe de tendance"
+    display_ref: scatter_trend
+    required_inputs:
+      x_meter: "Meter pour axe X"
+      y_meter: "Meter pour axe Y"

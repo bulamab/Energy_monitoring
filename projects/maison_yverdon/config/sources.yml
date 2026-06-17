@@ -1,0 +1,85 @@
+# projects/maison_yverdon/config/sources.yml
+
+project: maison_yverdon
+
+bindings:
+  gas_in:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "gas_meter.csv"
+    date_column: date
+    value_column: consumption_m3
+    unit: m3
+    conversion_factor_ref: energy_carriers.natural_gas.m3_to_pci
+
+  heat_meter:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "heat_meter.csv"
+    date_column: date
+    value_column: heat_kWh
+    unit: kWh
+
+  dhw_meter_boiler:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "dhw_boiler_meter.csv"
+    date_column: date
+    value_column: heat_ECS_kWh
+    unit: kWh
+
+  dhw_meter:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "dhw_meter.csv"
+    date_column: date
+    value_column: ECS_consumption_m3
+    unit: m3
+
+  pv_meter:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "pv_meter.csv"
+    date_column: date
+    value_column: production_kWh
+    unit: kWh
+
+  grid_in_meter:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "grid_in_meter.csv"
+    date_column: date
+    value_column: consumption_kWh
+    unit: kWh
+
+  grid_out_meter:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "grid_out_meter.csv"
+    date_column: date
+    value_column: injection_kWh
+    unit: kWh
+
+  temp_ext_meteo:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "meteo_mathod.csv"
+    date_column: date
+    value_column: temperature_mean_C
+    unit: degC
+
+  solar_meteo:
+    source_type: csv
+    base_path: "projects/maison_yverdon/data/"
+    file: "meteo_mathod.csv"
+    date_column: date
+    value_column: radiation_mean_Wm2
+    unit: W/m2
+
+  sia_daily:
+    source_type: csv
+    base_path: "reference/climate/"
+    file: "PAY_dry_Daily.csv"
+    date_column: date
+    value_column: temperature_mean_C
+    unit: degC

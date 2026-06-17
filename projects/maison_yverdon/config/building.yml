@@ -1,0 +1,17 @@
+# projects/maison_yverdon/config/building.yml
+params:
+  name: "Maison Yverdon"
+  type: SFH
+  sre: 200        # m² SRE — tu confirmes la valeur ?
+  occupants: 5
+
+energy_providers:
+  electricity:
+    provider_ref: financial.yverdon_energies_electricity
+  gas:
+    provider_ref: financial.yverdon_energies_gas
+
+equipment:
+  pv:
+    peak_power_kwc: 22.75      # puissance crête en kWc
+    surface_m2: 129           # surface des panneaux en m²

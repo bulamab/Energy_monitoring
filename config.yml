@@ -1,0 +1,8 @@
+# config.yml — configuration générale du système
+
+system:
+  resolution: daily       # monthly ou daily
+  timezone: "Europe/Zurich"
+
+logging:
+  level: INFO

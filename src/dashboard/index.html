@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energy Monitoring</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+  <!-- Les scripts de graphiques sont chargés dynamiquement depuis /api/charts -->
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f6f9;
+      color: #2c3e50;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 0.8rem 2rem;
+      flex-shrink: 0;
+    }
+    header h1 { font-size: 1.1rem; font-weight: 600; }
+
+    nav.main-nav {
+      background: #34495e;
+      display: flex;
+      flex-shrink: 0;
+    }
+    nav.main-nav button {
+      background: none; border: none;
+      color: #bdc3c7; padding: 0.75rem 1.5rem;
+      font-size: 0.95rem; cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    nav.main-nav button:hover  { color: white; background: rgba(255,255,255,0.05); }
+    nav.main-nav button.active { color: white; border-bottom-color: #3498db; }
+
+    nav.sub-nav {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      padding: 0 1.5rem;
+      flex-shrink: 0;
+    }
+    nav.sub-nav button {
+      background: none; border: none;
+      color: #7f8c8d; padding: 0.6rem 1.1rem;
+      font-size: 0.88rem; cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    nav.sub-nav button:hover  { color: #2c3e50; }
+    nav.sub-nav button.active { color: #3498db; border-bottom-color: #3498db; font-weight: 600; }
+
+    #content {
+      flex: 1; overflow-y: auto;
+      padding: 1.5rem 2rem;
+    }
+    .cards {
+      display: flex; flex-wrap: wrap; gap: 1.5rem;
+    }
+    .card {
+      background: white; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 1.2rem 1.5rem;
+      flex: 1 1 500px;
+    }
+    .card h2   { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .card .unit { font-size: 0.78rem; color: #95a5a6; margin-bottom: 0.8rem; }
+    .chart { width: 100%; height: 300px; }
+    .empty-section { color: #bdc3c7; font-size: 0.9rem; padding: 2rem 0; font-style: italic; }
+    .loading { color: #7f8c8d; padding: 2rem; }
+    .error   { color: #e74c3c; padding: 2rem; }
+  </style>
+</head>
+<body>
+
+<header><h1 id="dash-title">Energy Monitoring</h1></header>
+<nav class="main-nav" id="main-nav"></nav>
+<nav class="sub-nav"  id="sub-nav"></nav>
+<div id="content"><div class="loading">Chargement...</div></div>
+
+<script>
+// ------------------------------------------------------------------
+// Registre des renderers JS — chargé dynamiquement depuis /api/charts
+// Chaque fichier JS de chart appelle registerChart(type, renderFn)
+// ------------------------------------------------------------------
+const RENDERERS = {};
+
+function registerChart(type, renderFn) {
+  RENDERERS[type] = renderFn;
+}
+
+async function loadChartScripts() {
+  const charts = await fetch("/api/charts").then(r => r.json());
+  for (const chart of charts) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = `/static/charts/${chart.js_file}`;
+      script.onload  = resolve;
+      script.onerror = () => {
+        console.warn(`Script introuvable : ${chart.js_file}`);
+        resolve();
+      };
+      document.head.appendChild(script);
+    });
+  }
+}
+
+// ------------------------------------------------------------------
+// État global
+// ------------------------------------------------------------------
+let dashData   = null;
+let activeMenu = 0;
+let activeSub  = 0;
+const charts   = {};
+
+// ------------------------------------------------------------------
+// Initialisation
+// ------------------------------------------------------------------
+async function init() {
+  try {
+    // Charge d'abord les scripts JS des graphiques
+    await loadChartScripts();
+
+    const res = await fetch("/api/dashboard");
+    dashData  = await res.json();
+    document.getElementById("dash-title").textContent = dashData.title;
+    renderMainNav();
+    selectMenu(0);
+  } catch(e) {
+    document.getElementById("content").innerHTML =
+      `<div class="error">Erreur chargement : ${e.message}</div>`;
+  }
+}
+
+// ------------------------------------------------------------------
+// Navigation principale
+// ------------------------------------------------------------------
+function renderMainNav() {
+  const nav = document.getElementById("main-nav");
+  nav.innerHTML = "";
+  dashData.navigation.forEach((menu, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = menu.title;
+    btn.onclick = () => selectMenu(i);
+    nav.appendChild(btn);
+  });
+}
+
+function selectMenu(i) {
+  activeMenu = i;
+  activeSub  = 0;
+  document.querySelectorAll("nav.main-nav button").forEach((b, j) =>
+    b.classList.toggle("active", j === i)
+  );
+  renderSubNav();
+  selectSection(0);
+}
+
+// ------------------------------------------------------------------
+// Sous-navigation
+// ------------------------------------------------------------------
+function renderSubNav() {
+  const nav = document.getElementById("sub-nav");
+  nav.innerHTML = "";
+  dashData.navigation[activeMenu].sections.forEach((section, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = section.title;
+    btn.onclick = () => selectSection(i);
+    nav.appendChild(btn);
+  });
+}
+
+function selectSection(i) {
+  activeSub = i;
+  document.querySelectorAll("nav.sub-nav button").forEach((b, j) =>
+    b.classList.toggle("active", j === i)
+  );
+  renderContent();
+}
+
+// ------------------------------------------------------------------
+// Contenu
+// ------------------------------------------------------------------
+function renderContent() {
+  const content = document.getElementById("content");
+  const section = dashData.navigation[activeMenu].sections[activeSub];
+  content.innerHTML = "";
+
+  if (!section.kpis || section.kpis.length === 0) {
+    content.innerHTML = `<div class="empty-section">Aucun indicateur défini pour cette section.</div>`;
+    return;
+  }
+
+  const cards = document.createElement("div");
+  cards.className = "cards";
+  content.appendChild(cards);
+
+  section.kpis.forEach(kpi => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>${kpi.title}</h2>
+      <div class="unit">${kpi.unit}</div>
+      <div class="chart" id="chart-${kpi.id}"></div>
+    `;
+    cards.appendChild(card);
+    requestAnimationFrame(() => renderChart(kpi));
+  });
+}
+
+// ------------------------------------------------------------------
+// Dispatch vers le bon renderer
+// ------------------------------------------------------------------
+function renderChart(kpi) {
+  const el = document.getElementById(`chart-${kpi.id}`);
+  if (!el) return;
+
+  if (charts[kpi.id]) { charts[kpi.id].dispose(); }
+  const chart = echarts.init(el);
+  charts[kpi.id] = chart;
+
+  const chartType = kpi.type;
+  const renderer  = RENDERERS[chartType];
+
+  if (renderer) {
+    renderer(chart, kpi, el);
+  } else {
+    el.innerHTML = `<div class="error">Renderer inconnu : ${chartType}</div>`;
+  }
+
+  window.addEventListener("resize", () => chart.resize());
+}
+
+init();
+</script>
+</body>
+</html>

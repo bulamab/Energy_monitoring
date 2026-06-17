@@ -1,0 +1,24 @@
+# reference/energy_carriers.yml
+
+electricity:
+  unit: kWh
+  primary_energy_factors:
+    mix_prod_CH:          # mix de production suisse (KBOB 2023)
+      value: 2.65
+  non_renewable_factors:
+    mix_prod_CH:
+      value: 0.569
+  co2_factors:            # kg CO2eq/kWh
+    mix_prod_CH:
+      value: 0.125
+
+natural_gas:
+  unit: kWh
+  m3_to_pcs: 11.397       # facteur m3→kWh PCS
+  m3_to_pci: 10.290      # facteur m3→kWh PCI
+  primary_energy_factor:
+    value: 1.05
+  non_renewable_factor:
+    value: 1.05
+  co2_factor:             # kg CO2eq/kWh PCI
+    value: 0.124

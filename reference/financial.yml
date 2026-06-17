@@ -1,0 +1,26 @@
+# reference/financial.yml
+
+yverdon_energies_electricity:
+  provider: "Yverdon-les-Bains Energies"
+  carrier: electricity
+  unit: CHF/kWh
+  tariff:
+    values:
+      "2024": 0.43772
+      "2025": 0.37692
+      "2026": 0.3637
+  feed_in_tariff:         # rétribution injection PV
+    values:
+      "2024": 0.196
+      "2025": 0.137
+      "2026": 0.1096
+
+yverdon_energies_gas:
+  provider: "Yverdon-les-Bains Energies"
+  carrier: natural_gas
+  unit: CHF/kWh
+  tariff:
+    values:
+      "2024": 0.1482
+      "2025": 0.1312
+      "2026": 0.1312

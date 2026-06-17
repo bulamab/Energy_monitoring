@@ -1,0 +1,243 @@
+# projects/maison_yverdon/config/dashboard.yml
+
+title: "Maison Yverdon"
+
+navigation:
+
+  - id: global
+    title: "Vue globale"
+    sections:
+      - id: financial
+        title: "Indicateurs financiers"
+        kpis:
+          - id: cost_annual
+            kpi_ref: stacked
+            title: "Coûts annuels"
+            inputs:
+              meters:
+               - meter: cost_elec
+                 label: "Électricité"
+               - meter: cost_gas
+                 label: "Gaz"
+               - meter: cost_feed_in
+                 label: "Revenu PV"
+                 sign: negative
+              unit: CHF
+              resolution: yearly
+
+          - id: cost_monthly
+            kpi_ref: monthly_sum_multi_year
+            title: "Coût énergie mensuel"
+            inputs:
+              meter: cost_total
+              unit: CHF
+              years: [2025, 2026]
+
+          - id: cost_stacked
+            kpi_ref: stacked
+            title: "Décomposition coûts énergie"
+            inputs:
+              meters:
+              - meter: cost_elec
+                label: "Électricité"
+              - meter: cost_gas
+                label: "Gaz"
+              - meter: cost_feed_in
+                label: "Revenu PV"
+                sign: negative
+              unit: CHF
+              line:
+                 type: cumulative_sum
+                 label: "Cumul annuel"
+                 color: "#2c3e50"
+
+      - id: primary_energy
+        title: "Énergie primaire"
+        kpis:
+          - id: elec_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "Électricité finale"
+            inputs:
+              meter: elec_final
+              unit: kWh
+              years: [2025, 2026]
+          - id: gas_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "Consommation gaz"
+            inputs:
+              meter: gas_in
+              unit: kWh
+              years: [2025, 2026]
+
+      - id: sankey
+        title: "Diagramme de Sankey"
+        kpis: []
+
+  - id: needs
+    title: "Besoins énergétiques"
+    sections:
+      - id: heating
+        title: "Chauffage"
+        kpis:
+          - id: heating_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "Besoins chauffage"
+            inputs:
+              meter: heat_demand_measured
+              unit: kWh
+              years: [2025, 2026]
+          - id: heating_multi_year_normalized
+            kpi_ref: monthly_sum_multi_year
+            title: "Besoins chauffage normalisés climatiquement"
+            inputs:
+              meter: heat_demand_normalized
+              unit: kWh
+              years: [2025, 2026]
+          
+          - id: dj_measure_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "DJ mesurés"
+            inputs:
+              meter: dj_20_12
+              unit: Kd
+              years: [2025, 2026]
+          
+          - id: dj_reference_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "DJ de référence"
+            inputs:
+              meter: dj_reference_daily
+              unit: Kd
+              years: [2025, 2026]
+          
+          - id: energy_signature
+            kpi_ref: scatter
+            title: "Signature énergétique"
+            inputs:
+              x_meter: temp_ext
+              y_meter: heat_demand_measured
+              x_label: "Température extérieure"
+              y_label: "Besoins chauffage"
+              unit_x: "°C"
+              unit_y: "kWh"
+              years: [2025, 2026]
+              resolution: daily #monthly #daily
+              trendline: true
+              y_min: 1        # exclut les jours sans chauffage
+              x_max: 15       # exclut les jours chauds sans intérêt
+            
+          - id: energy_signature_power
+            kpi_ref: scatter
+            title: "Signature énergétique"
+            inputs:
+              x_meter: temp_ext
+              y_meter: heat_power_mean
+              x_label: "Température extérieure"
+              y_label: "Puissance de chauffage moyenne"
+              unit_x: "°C"
+              unit_y: "kW"
+              years: [2025, 2026]
+              resolution: daily #monthly #daily
+              trendline: true
+              y_min: 0.1        # exclut les jours sans chauffage
+              x_max: 15       # exclut les jours chauds sans intérêt
+            
+          - id: test_heures
+            kpi_ref: monthly_sum_multi_year
+            title: "DJ mesurés"
+            inputs:
+              meter: hours
+              unit: h
+              years: [2025, 2026]
+              
+
+      - id: dhw
+        title: "Eau chaude sanitaire"
+        kpis:
+          - id: dhw_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "Besoins ECS"
+            inputs:
+              meter: dhw_measured_boiler
+              unit: kWh
+              years: [2025, 2026]
+
+      - id: electricity
+        title: "Électricité ménage"
+        kpis: []
+
+      - id: mobility
+        title: "Mobilité"
+        kpis: []
+
+  - id: equipment
+    title: "Équipements"
+    sections:
+      - id: boiler
+        title: "Chaudière gaz"
+        kpis:
+          - id: gas_monthly
+            kpi_ref: monthly_sum_multi_year
+            title: "Consommation gaz mensuelle"
+            inputs:
+              meter: gas_in
+              unit: kWh
+              years: [2025, 2026]
+          - id: boiler_efficiency_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "Efficacité chaudière"
+            inputs:
+              meter: boiler_efficiency
+              unit: "%"
+              years: [2025, 2026]
+      
+
+      - id: dhw_pac
+        title: "Chauffe-eau PAC"
+        kpis: []
+
+      - id: pv
+        title: "Photovoltaïque"
+        kpis:
+          - id: pv_multi_year
+            kpi_ref: monthly_sum_multi_year
+            title: "Production PV"
+            inputs:
+              meter: pv_production
+              unit: kWh
+              years: [2025, 2026]
+
+          - id: pv_vs_radiation
+            kpi_ref: stacked
+            title: "Production PV vs Rayonnement solaire"
+            inputs:
+              meters:
+                - meter: pv_production
+                  label: "Production PV"
+              unit: kWh
+              line:
+                type: meter
+                meter: solar_irradiance
+                label: "Rayonnement solaire"
+                color: "#f39c12"
+                unit: "W/m²"
+                axis: secondary
+
+          - id: pv_performance_ratio
+            kpi_ref: stacked
+            title: "Performance ratio PV"
+            inputs:
+              meters:
+                - meter: pv_performance_ratio
+                  label: "Performance ratio PV"
+              unit: "-"
+
+          - id: pv_hours_year
+            kpi_ref: stacked
+            title: "Heures de production PV à pleine charge par an"
+            inputs:
+              meters:
+                - meter: pv_hours_year
+                  label: "Heures de production PV"
+              unit: "h"
+              resolution: yearly

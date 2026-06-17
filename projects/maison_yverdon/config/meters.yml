@@ -1,0 +1,229 @@
+# projects/maison_yverdon/meters.yml
+
+meters:
+
+  # --- PHYSIQUES ---
+
+  gas_in:
+    type: physical
+    description: "Gaz naturel consommé"
+    unit: kWh 
+    source_ref: gas_in
+    source_resolution: daily
+
+  heat_demand_measured:
+    type: physical
+    description: "Chaleur bâtiment — compteur chaleur  chauffage de sol"
+    unit: kWh
+    source_ref: heat_meter
+    source_resolution: daily
+
+  dhw_measured_boiler:
+    type: physical
+    description: "ECS totale — compteur de chaleur production ECS chaufière"
+    unit: kWh
+    source_ref: dhw_meter_boiler
+    source_resolution: daily
+
+  #dhw_pac_elec:
+  #  type: physical
+  #  description: "Électricité chauffe-eau PAC"
+  #  unit: kWh
+  #  source_ref: dhw_pac_elec_meter
+  #  source_resolution: daily
+
+  dhw_consumption:
+    type: physical
+    description: "Eau chaude sanitaire consommée"
+    unit: m3
+    source_ref: dhw_meter
+    source_resolution: daily
+
+  pv_production:
+    type: physical
+    description: "Production photovoltaïque"
+    unit: kWh
+    source_ref: pv_meter
+    source_resolution: daily
+
+  grid_in:
+    type: physical
+    description: "Électricité soutirée réseau"
+    unit: kWh
+    source_ref: grid_in_meter
+    source_resolution: daily
+
+  grid_out:
+    type: physical
+    description: "Électricité injectée réseau"
+    unit: kWh
+    source_ref: grid_out_meter
+    source_resolution: daily
+
+  # --- ESTIMÉS ---
+
+  # --- MÉTÉO ---
+  temp_ext:
+    type: physical
+    description: "Température extérieure journalière moyenne — MétéoSuisse"
+    unit: degC
+    aggregation: mean
+    source_ref: temp_ext_meteo
+
+  solar_irradiance:
+    type: physical
+    description: "Rayonnement solaire global journalier moyen — MétéoSuisse"
+    unit: W/m2
+    aggregation: mean
+    source_ref: solar_meteo
+ 
+
+  # --- VIRTUELS ---
+  pv_self_consumption:
+    type: virtual
+    description: "Autoconsommation PV"
+    unit: kWh
+    formula: "pv_production - grid_out"
+
+  elec_final:
+    type: virtual
+    description: "Électricité finale consommée"
+    unit: kWh
+    formula: "grid_in + pv_self_consumption"
+
+  dhw_energy_estimated:
+    type: virtual
+    description: "Énergie ECS estimée depuis volume consommé"
+    unit: kWh
+    formula: "dhw_consumption * @kwh_per_m3_ecs"
+    constants:
+      kwh_per_m3_ecs: 46.52       # kWh/m³ — Cp eau × ΔT (55-15°C)
+    note: "Q = V × 1000 × 1.163 × (55-15) / 1000"
+
+  cost_elec:
+    type: virtual
+    description: "Coût électricité mensuel"
+    unit: CHF
+    formula: "elec_final * price_electricity"
+
+  cost_gas:
+    type: virtual
+    description: "Coût gaz mensuel"
+    unit: CHF
+    formula: "gas_in * price_gas"
+
+  cost_feed_in:
+    type: virtual
+    description: "Revenu injection PV mensuel"
+    unit: CHF
+    formula: "grid_out * price_feed_in"
+
+  cost_total:
+    type: virtual
+    description: "Coût énergie total mensuel"
+    unit: CHF
+    formula: "cost_elec + cost_gas - cost_feed_in"
+
+  pv_irradiance_energy:
+    type: virtual
+    description: "Énergie solaire reçue par les panneaux"
+    unit: kWh
+    formula: "solar_irradiance * @surface_m2 / 1000 * 24"
+    constants:
+      surface_m2:
+        ref: building.equipment.pv.surface_m2
+    note: "W/m² × m² / 1000 × 24h = kWh/jour"
+
+  pv_performance_ratio:
+    type: virtual
+    description: "Performance ratio PV"
+    unit: "-"
+    aggregation: mean
+    formula: "pv_production / pv_irradiance_energy"
+
+  pv_hours_year:
+    type: virtual
+    description: "Heures de production PV à pleine charge par an"
+    unit: "h"
+    aggregation: sum
+    constants:
+      peak_power_kwc:
+        ref: building.equipment.pv.peak_power_kwc
+    formula: "pv_production / @peak_power_kwc"
+
+  heat_demand_normalized:
+    type: virtual
+    description: "Besoins chaleur normalisés climatiquement"
+    unit: kWh
+    aggregation: sum
+    formula: "heat_demand_measured * dj_reference_daily / dj_20_12"
+    note: >
+      Normalise la consommation par rapport au climat de référence SIA.
+      Valeur NaN les jours sans chauffage (dj_20_12 = 0).
+
+  heat_power_mean:
+    type: virtual
+    description: "Puissance moyenne chauffage"
+    unit: kW
+    aggregation: mean
+    formula: "heat_demand_measured / hours"
+
+  boiler_efficiency:
+    type: virtual
+    description: "Efficacité de la chaudière"
+    unit: "%"
+    aggregation: mean
+    formula: "(dhw_measured_boiler + heat_demand_measured) / gas_in * 100"
+    note: >
+      Rendement chaudière = (chaleur CH + chaleur ECS) / gaz consommé
+
+  # --- Prix ---
+
+  price_electricity:
+    type: tariff
+    description: "Tarif électricité soutirée"
+    unit: CHF/kWh
+    provider_ref: building.energy_providers.electricity
+
+  price_feed_in:
+    type: tariff
+    description: "Rétribution injection PV"
+    unit: CHF/kWh
+    provider_ref: building.energy_providers.electricity
+    tariff_key: feed_in_tariff
+
+  price_gas:
+    type: tariff
+    description: "Tarif gaz naturel"
+    unit: CHF/kWh
+    provider_ref: building.energy_providers.gas
+
+  #derivés
+  dj_20_12:
+    type: derived
+    description: "Degrés-jours de chauffage journaliers — base 20/12"
+    unit: Kd
+    aggregation: sum
+    method: degree_days
+    params:
+      temp_meter: temp_ext
+      base_heat: 20
+      base_cool: 12
+  
+  dj_reference_daily:
+    type: reference_year
+    description: "DJ journaliers de référence SIA — PAY Yverdon"
+    unit: Kd
+    aggregation: sum
+    source_ref: sia_daily
+    method: degree_days
+    params:
+      base_heat: 20
+      base_cool: 12
+
+  hours:
+    type: derived
+    description: "Nombre d'heures par pas de temps"
+    unit: h
+    aggregation: sum
+    method: hours_per_timestep
