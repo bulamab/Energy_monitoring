@@ -50,10 +50,19 @@ kpis:
           axis: "primary (défaut) | secondary"
           meter: "meter_id si type=meter"
           value: "constante si type=reference"
-          
+
   scatter:
     description: "Scatter plot avec courbe de tendance"
     display_ref: scatter_trend
     required_inputs:
       x_meter: "Meter pour axe X"
       y_meter: "Meter pour axe Y"
+
+  energy_label_heating:
+    description: "Label énergie pour le chauffage — calculé selon SIA 380/1"
+    display_ref: energy_label_heating
+    required_inputs:
+        heat_meter   : "meter chaleur chauffage (défaut: heat_demand_measured)"
+        dj_meter     : "meter DJ réels          (défaut: dj_20_12)"
+        dj_ref_meter : "meter DJ référence      (défaut: dj_reference_daily)"
+        year         : "année à afficher"

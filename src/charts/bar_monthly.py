@@ -17,7 +17,7 @@ CHART_META = {
 
 
 def compute(df_daily: pd.DataFrame, inputs: dict, meta: dict,
-            meters: dict = None) -> dict:
+            meters: dict = None, **kwargs) -> dict:
     meter_id = inputs.get("meter")
     unit     = inputs.get("unit", "")
 

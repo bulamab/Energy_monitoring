@@ -29,10 +29,11 @@ MONTH_LABELS = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
 
 
 def compute(df_daily: pd.DataFrame, inputs: dict, meta: dict,
-            meters: dict = None) -> dict:
+            meters: dict = None, **kwargs) -> dict:
     meter_id = inputs.get("meter")
     unit     = inputs.get("unit", "")
-    years    = inputs.get("years", [])
+    years    = inputs.get("years", [],
+                          )
 
     if not meter_id:
         raise ValueError("bar_monthly_multi_year : input 'meter' manquant.")

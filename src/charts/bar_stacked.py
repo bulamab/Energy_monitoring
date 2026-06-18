@@ -44,7 +44,7 @@ FREQ_MAP = {
 
 
 def compute(df_daily: pd.DataFrame, inputs: dict, meta: dict,
-            meters: dict = None) -> dict:
+            meters: dict = None, **kwargs) -> dict:
 
     meters_cfg = inputs.get("meters", [])
     unit       = inputs.get("unit", "")

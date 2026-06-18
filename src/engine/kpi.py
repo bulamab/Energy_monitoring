@@ -128,13 +128,13 @@ class KPIEngine:
 
         try:
             import math
-            chart_data = handler(self._df, inputs, meta, meters=self.meters)
+            chart_data = handler(self._df, inputs, meta, meters=self.meters,  building = self.building)
             # Nettoie les NaN → None (JSON compliant)
             chart_data = _clean_nan(chart_data)
             return {
                 "id"     : kpi_id,
                 "title"  : instance.get("title", kpi_def.get("description", kpi_id)),
-                "display": meta.get("display", {}),
+                "display": {"type": meta.get("type", display_ref)},
                 **chart_data,
             }
         except Exception as e:

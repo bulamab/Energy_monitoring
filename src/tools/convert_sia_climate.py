@@ -10,7 +10,7 @@ Usage :
         --output reference/climate/sia_yverdon_daily.csv \
         --base-heat 20 \
         --base-cool 12 \
-        --year 2001
+        --year 2002
 
 Le fichier SIA a un index temporel en heures depuis le début de l'année
 (Time=0.0 → 1er janvier 00h00, résolution 0.5h ou 1h).

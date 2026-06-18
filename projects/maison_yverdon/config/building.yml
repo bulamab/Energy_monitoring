@@ -2,8 +2,11 @@
 params:
   name: "Maison Yverdon"
   type: SFH
-  sre: 200        # m² SRE — tu confirmes la valeur ?
+  sre: 253.1        # m² SRE 
   occupants: 5
+
+heating:
+  qh_li: 52.2    # kWh/m²·an — valeur limite SIA pour ce bâtiment
 
 energy_providers:
   electricity:

@@ -79,13 +79,15 @@ navigation:
       - id: heating
         title: "Chauffage"
         kpis:
-          - id: heating_multi_year
-            kpi_ref: monthly_sum_multi_year
-            title: "Besoins chauffage"
+          - id: energy_label
+            kpi_ref: energy_label_heating
+            title: "Étiquette énergie — enveloppe"
             inputs:
-              meter: heat_demand_measured
-              unit: kWh
-              years: [2025, 2026]
+              heat_meter: heat_demand_measured
+              dj_meter: dj_20_12
+              dj_ref_meter: dj_reference_daily
+              year: 2025
+
           - id: heating_multi_year_normalized
             kpi_ref: monthly_sum_multi_year
             title: "Besoins chauffage normalisés climatiquement"
@@ -93,38 +95,6 @@ navigation:
               meter: heat_demand_normalized
               unit: kWh
               years: [2025, 2026]
-          
-          - id: dj_measure_multi_year
-            kpi_ref: monthly_sum_multi_year
-            title: "DJ mesurés"
-            inputs:
-              meter: dj_20_12
-              unit: Kd
-              years: [2025, 2026]
-          
-          - id: dj_reference_multi_year
-            kpi_ref: monthly_sum_multi_year
-            title: "DJ de référence"
-            inputs:
-              meter: dj_reference_daily
-              unit: Kd
-              years: [2025, 2026]
-          
-          - id: energy_signature
-            kpi_ref: scatter
-            title: "Signature énergétique"
-            inputs:
-              x_meter: temp_ext
-              y_meter: heat_demand_measured
-              x_label: "Température extérieure"
-              y_label: "Besoins chauffage"
-              unit_x: "°C"
-              unit_y: "kWh"
-              years: [2025, 2026]
-              resolution: daily #monthly #daily
-              trendline: true
-              y_min: 1        # exclut les jours sans chauffage
-              x_max: 15       # exclut les jours chauds sans intérêt
             
           - id: energy_signature_power
             kpi_ref: scatter
@@ -142,13 +112,7 @@ navigation:
               y_min: 0.1        # exclut les jours sans chauffage
               x_max: 15       # exclut les jours chauds sans intérêt
             
-          - id: test_heures
-            kpi_ref: monthly_sum_multi_year
-            title: "DJ mesurés"
-            inputs:
-              meter: hours
-              unit: h
-              years: [2025, 2026]
+
               
 
       - id: dhw

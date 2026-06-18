@@ -41,20 +41,22 @@ function renderScatterTrend(chart, kpi, el) {
   chart.setOption({
     title: [
       // Titre axe Y — positionné manuellement à gauche
-      {
-        text     : yLabel,
-        textStyle: { fontSize: 11, color: "#555", fontWeight: "normal" },
-        left     : 0,
-        top      : "center",
-        textVerticalAlign: "middle",
-      },
+      //{
+      //  text     : yLabel,
+      //  textStyle: { fontSize: 11, color: "#555", fontWeight: "normal" },
+      //  left     : 0,
+      //  top      : "top",
+      //  textVerticalAlign: "bottom",
+      //},
+      
       // Équation de régression — sous le graphique
       {
         text        : "",
         subtext     : subtitle,
         subtextStyle: { fontSize: 11, color: "#7f8c8d" },
-        left        : "center",
-        bottom      : 28,
+        //left        : "right",
+        right       : 30,
+        top         : 10,
       }
     ],
     tooltip: {
@@ -71,7 +73,7 @@ function renderScatterTrend(chart, kpi, el) {
       bottom   : 0,
       textStyle: { fontSize: 11 }
     },
-    grid: { left: 80, right: 20, top: 20, bottom: 65 },
+    grid: { left: 50, right: 20, top: 20, bottom: 65 },
     xAxis: {
       type         : "value",
       name         : xLabel,
@@ -81,6 +83,9 @@ function renderScatterTrend(chart, kpi, el) {
     },
     yAxis: {
       type         : "value",
+      name         : yLabel,
+      nameLocation : "middle",
+      nameGap      : 28,
       axisLabel    : { fontSize: 11 }
       // pas de name — géré par title
     },

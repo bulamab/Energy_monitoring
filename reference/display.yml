@@ -25,3 +25,6 @@ displays:
       - "#9b59b6"
       - "#e74c3c"
       - "#1abc9c"
+
+  energy_label:
+    type: energy_label_heating
