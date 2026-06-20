@@ -66,3 +66,26 @@ kpis:
         dj_meter     : "meter DJ réels          (défaut: dj_20_12)"
         dj_ref_meter : "meter DJ référence      (défaut: dj_reference_daily)"
         year         : "année à afficher"
+
+  bullet:
+    description: "Jauge bullet — ratio annuel entre deux compteurs, ou valeur directe d'un compteur, sélection d'année"
+    display_ref: bullet
+    required_inputs:
+      numerator:
+        description: "Meter à afficher (numérateur si ratio, valeur directe sinon)"
+      years:
+        description: "Liste des années sélectionnables"
+        type: list
+    optional_inputs:
+      denominator:
+        description: "Meter au dénominateur — si omis, affiche la somme annuelle de 'numerator' directement (pas de ratio, pas de ×100)"
+      unit:
+        description: "Défaut '%' si denominator fourni, sinon vide — à préciser explicitement (ex: 'h')"
+      target:
+        description: "Valeur cible — ligne repère verticale"
+      min:
+        description: "Borne basse axe (défaut: 0)"
+      max:
+        description: "Borne haute axe (défaut: 100)"
+      ranges:
+        description: "Zones qualitatives [{to, color}], triées croissant"

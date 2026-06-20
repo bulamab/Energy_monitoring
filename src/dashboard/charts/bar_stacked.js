@@ -86,6 +86,14 @@ function renderBarStacked(chart, kpi, el) {
     yAxisIndex: 0,
     data      : (year_data[mid] || Array(x_labels.length).fill(null)),
     itemStyle : { color: colors[i % colors.length] },
+    label     : resolution === "yearly" ? {
+        show     : true,
+        position : "inside",
+        formatter: params => params.value !== null && params.value !== 0 ? `${params.value.toFixed(0)} ${kpi.unit}` : "",
+        fontSize : 10,
+        color    : "#2c3e50",
+    } : { show: false },
+    barWidth  : "90%",
   }));
 
   // --- Ligne optionnelle ---
@@ -102,6 +110,13 @@ function renderBarStacked(chart, kpi, el) {
       symbolSize: 5,
       lineStyle : { color: line_cfg.color || "#2c3e50", width: 2 },
       itemStyle : { color: line_cfg.color || "#2c3e50" },
+      label     : {
+        show    : true,
+        position: "top",
+        formatter: params => params.value !== null ? `${params.value.toFixed(0)} ${line_cfg.unit || kpi.unit}` : "",
+        fontSize : 10,
+        color    : line_cfg.color || "#2c3e50",
+      },
       z         : 10,
     });
     legend_items.push(line_cfg.label);

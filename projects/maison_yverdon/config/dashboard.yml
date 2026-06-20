@@ -7,6 +7,7 @@ navigation:
   - id: global
     title: "Vue globale"
     sections:
+
       - id: financial
         title: "Indicateurs financiers"
         kpis:
@@ -24,6 +25,7 @@ navigation:
                  sign: negative
               unit: CHF
               resolution: yearly
+              years: [2025, 2026]    # ← années à afficher
 
           - id: cost_monthly
             kpi_ref: monthly_sum_multi_year
@@ -86,7 +88,7 @@ navigation:
               heat_meter: heat_demand_measured
               dj_meter: dj_20_12
               dj_ref_meter: dj_reference_daily
-              year: 2025
+              years: [2025, 2026]
 
           - id: heating_multi_year_normalized
             kpi_ref: monthly_sum_multi_year
@@ -187,21 +189,74 @@ navigation:
                 unit: "W/m²"
                 axis: secondary
 
+          - id: pv_self_consumption_rate
+            kpi_ref: bullet
+            title: "Taux d'autoconsommation PV (autoconsommation / production)"
+            inputs:
+              numerator: pv_self_consumption
+              denominator: pv_production
+              years: [2025, 2026]
+              target: 60
+              min: 0
+              max: 100
+              ranges:
+                - to: 30
+                  color: "#e74c3c"
+                - to: 60
+                  color: "#f39c12"
+                - to: 100
+                  color: "#2ecc71"
+                  
+          - id: pv_self_production_rate
+            kpi_ref: bullet
+            title: "Degré d'autonomie PV (autoconsommation / consommation totale)"
+            inputs:
+              numerator: pv_self_consumption
+              denominator: elec_final
+              years: [2025, 2026]
+              target: 60
+              min: 0
+              max: 100
+              ranges:
+                - to: 30
+                  color: "#e74c3c"
+                - to: 60
+                  color: "#f39c12"
+                - to: 100
+                  color: "#2ecc71"
+            
           - id: pv_performance_ratio
-            kpi_ref: stacked
-            title: "Performance ratio PV"
+            kpi_ref: bullet
+            title: "Performance installation PV (production / énergie solaire reçue)"
             inputs:
-              meters:
-                - meter: pv_performance_ratio
-                  label: "Performance ratio PV"
-              unit: "-"
+              numerator: pv_production
+              denominator: pv_irradiance_energy
+              years: [2025, 2026]
+              target: 15
+              min: 0
+              max: 20
+              ranges:
+                - to: 8
+                  color: "#e74c3c"
+                - to: 12
+                  color: "#f39c12"
+                - to: 20
+                  color: "#2ecc71"
 
-          - id: pv_hours_year
-            kpi_ref: stacked
-            title: "Heures de production PV à pleine charge par an"
+          - id: pv_hours_year_bullet
+            kpi_ref: bullet
+            title: "Heures de production PV à pleine charge"
             inputs:
-              meters:
-                - meter: pv_hours_year
-                  label: "Heures de production PV"
+              numerator: pv_hours_year
+              years: [2023, 2024, 2025, 2026]
               unit: "h"
-              resolution: yearly
+              target: 900        # référence suisse
+              min: 0
+              max: 1300
+              ranges:
+                - to: 700
+                  color: "#e74c3c"
+                - to: 900
+                  color: "#f39c12"
+                - to: 1300
+                  color: "#2ecc71"

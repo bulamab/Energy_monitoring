@@ -7,6 +7,7 @@ params:
 
 heating:
   qh_li: 52.2    # kWh/m²·an — valeur limite SIA pour ce bâtiment
+  dj_reference: 3375    # DJ annuels année de référence SIA poue la zone climatique de Yverdon
 
 energy_providers:
   electricity:

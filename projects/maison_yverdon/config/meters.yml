@@ -128,7 +128,7 @@ meters:
     type: virtual
     description: "Énergie solaire reçue par les panneaux"
     unit: kWh
-    formula: "solar_irradiance * @surface_m2 / 1000 * 24"
+    formula: "solar_irradiance * @surface_m2 / 1000 * hours"
     constants:
       surface_m2:
         ref: building.equipment.pv.surface_m2
