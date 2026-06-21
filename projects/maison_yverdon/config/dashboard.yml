@@ -120,17 +120,24 @@ navigation:
       - id: dhw
         title: "Eau chaude sanitaire"
         kpis:
-          - id: dhw_multi_year
-            kpi_ref: monthly_sum_multi_year
-            title: "Besoins ECS"
+          - id: ECS_calendar
+            kpi_ref: calendar_heatmap
+            title: "Consommation d'eau chaude sanitaire — vue calendrier"
             inputs:
-              meter: dhw_measured_boiler
-              unit: kWh
+              meter: dhw_consumption
+              unit: m3
               years: [2025, 2026]
 
       - id: electricity
         title: "Électricité ménage"
-        kpis: []
+        kpis: 
+          - id: elec_calendar
+            kpi_ref: calendar_heatmap
+            title: "Consommation électrique — vue calendrier"
+            inputs:
+              meter: elec_final
+              unit: kWh
+              years: [2023, 2024, 2025, 2026]
 
       - id: mobility
         title: "Mobilité"
@@ -156,6 +163,18 @@ navigation:
               meter: boiler_efficiency
               unit: "%"
               years: [2025, 2026]
+            
+          - id: heat_split
+            kpi_ref: ring_pie
+            title: "Répartition de la chaleur — chauffage vs ECS"
+            inputs:
+              meters:
+                - meter: heat_demand_measured
+                  label: "Chauffage locaux"
+                - meter: dhw_measured_boiler
+                  label: "Eau chaude sanitaire"
+              unit: kWh
+              years: [2023, 2024, 2025, 2026]
       
 
       - id: dhw_pac
@@ -260,3 +279,11 @@ navigation:
                   color: "#f39c12"
                 - to: 1300
                   color: "#2ecc71"
+
+          - id: PV_calendar
+            kpi_ref: calendar_heatmap
+            title: "Production PV — vue calendrier"
+            inputs:
+              meter: pv_production
+              unit: kWh
+              years: [2023, 2024, 2025, 2026]

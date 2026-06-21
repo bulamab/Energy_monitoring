@@ -89,3 +89,31 @@ kpis:
         description: "Borne haute axe (défaut: 100)"
       ranges:
         description: "Zones qualitatives [{to, color}], triées croissant"
+
+  ring_pie:
+    description: "Camembert en anneau (donut) — répartition d'un total entre plusieurs compteurs, par année"
+    display_ref: ring_pie
+    required_inputs:
+      meters:
+        description: "Liste de meters [{meter, label, color?}]"
+        type: list
+      unit:
+        description: "Unité commune à tous les meters"
+      years:
+        description: "Liste des années sélectionnables"
+        type: list
+
+  calendar_heatmap:
+    description: "Heatmap calendaire — une valeur par jour sur une année, intensité de couleur"
+    display_ref: calendar_heatmap
+    required_inputs:
+      meter:
+        description: "Meter à afficher"
+      unit:
+        description: "Unité du meter"
+      years:
+        description: "Liste des années sélectionnables"
+        type: list
+    optional_inputs:
+      color_scale:
+        description: "Liste de couleurs hex pour le dégradé (faible → fort), défaut vert GitHub-style"

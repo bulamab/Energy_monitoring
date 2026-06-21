@@ -185,7 +185,7 @@ if __name__ == "__main__":
         kpis_path      = "reference/kpis.yml",
         dashboard_path = f"projects/{PROJECT}/config/dashboard.yml",
         building_path  = f"projects/{PROJECT}/config/building.yml",
-        display_path   = "reference/display.yml"
+        meters_path    = f"projects/{PROJECT}/config/meters.yml"
     )
 
     result = engine.compute_navigation(df_daily)
